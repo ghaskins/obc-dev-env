@@ -37,6 +37,9 @@ apt-get update -qq
 echo 'DOCKER_OPTS="-s=aufs -r=true --api-enable-cors=true -H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock --insecure-registry leanjazz.rtp.raleigh.ibm.com:5000 ${DOCKER_OPTS}"' > /etc/default/docker
 service docker restart
 
+# install/configure LXC
+apt-get install --yes lxc
+
 # Install Python, pip, behave, nose
 apt-get install --yes python-setuptools
 apt-get install --yes python-pip
@@ -83,3 +86,11 @@ sudo chown -R vagrant:vagrant /var/openchain
 
 # Ensure permissions are set for GOPATH
 sudo chown -R vagrant:vagrant $GOPATH
+
+# Make our tools available on the path
+cat <<EOF >/tmp/obctoolspath.sh
+export PATH="/openchain/obc-dev-env/scripts:\$PATH"
+EOF
+sudo mv /tmp/obctoolspath.sh /etc/profile.d/obctoolspath.sh
+sudo chmod 0755 /etc/profile.d/obctoolspath.sh
+source /etc/profile.d/obctoolspath.sh

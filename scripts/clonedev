@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+set -x
+
+NAME=`uuidgen`
+BASE=/tmp/$NAME
+ROOT=$BASE/rootfs-delta 
+
+mkdir -p $ROOT
+
+cat <<EOF >$BASE/config
+lxc.include = /usr/share/lxc/config/ubuntu.common.conf
+lxc.arch = x86_64
+
+lxc.rootfs = overlayfs:/:$ROOT
+lxc.utsname = $NAME
+
+lxc.mount.entry = /openchain openchain none bind 0 0
+lxc.mount.entry = /opt/gopath/src/github.com/openblockchain/obc-peer opt/gopath/src/github.com/openblockchain/obc-peer none bind 0 0
+
+lxc.network.type = veth
+lxc.network.link = lxcbr0
+lxc.network.flags = up
+EOF
+
+lxc-execute -f $BASE/config -n $NAME /bin/bash
+
+rm -rf $BASE
