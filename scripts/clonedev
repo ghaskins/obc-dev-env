@@ -5,7 +5,7 @@ set -x
 
 NAME=`uuidgen`
 BASE=/tmp/$NAME
-ROOT=$BASE/rootfs-delta 
+ROOT=$BASE/rootfs-delta
 
 mkdir -p $ROOT
 
@@ -24,6 +24,9 @@ lxc.network.link = lxcbr0
 lxc.network.flags = up
 EOF
 
-lxc-execute -f $BASE/config -n $NAME /bin/bash
+mkdir -p $ROOT/etc
+echo "`cat /etc/hostname`-$NAME" > $ROOT/etc/hostname
+
+lxc-start -f $BASE/config -n $NAME
 
 rm -rf $BASE
