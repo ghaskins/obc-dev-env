@@ -33,6 +33,9 @@ mkdir -p $ROOT/etc/init
 echo "`cat /etc/hostname`-$NAME" > $ROOT/etc/hostname
 
 lxc-start -f $BASE/config -n $NAME -d
+lxc-wait -n $NAME -s RUNNING
 lxc-attach -n $NAME --keep-env /openchain/obc-dev-env/scripts/cloneshell
+lxc-stop -n $NAME -k
+lxc-wait -n $NAME -s STOPPED
 
 rm -rf $BASE
