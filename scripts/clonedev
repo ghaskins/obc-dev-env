@@ -24,7 +24,16 @@ lxc.network.link = lxcbr0
 lxc.network.flags = up
 EOF
 
-mkdir -p $ROOT/etc
+mkdir -p $ROOT/etc/init
+
+INIT=$ROOT/etc/init/
+touch $INIT/docker.conf
+touch $INIT/plymouth-upstart-bridge.conf
+
+#cat <<EOF >$ROOT/etc/init/console.conf
+#exec /sbin/poweroff
+#EOF
+
 echo "`cat /etc/hostname`-$NAME" > $ROOT/etc/hostname
 
 lxc-start -f $BASE/config -n $NAME
