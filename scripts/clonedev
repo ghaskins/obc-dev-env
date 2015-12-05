@@ -26,16 +26,13 @@ EOF
 
 mkdir -p $ROOT/etc/init
 
-INIT=$ROOT/etc/init/
-touch $INIT/docker.conf
-touch $INIT/plymouth-upstart-bridge.conf
-
 #cat <<EOF >$ROOT/etc/init/console.conf
 #exec /sbin/poweroff
 #EOF
 
 echo "`cat /etc/hostname`-$NAME" > $ROOT/etc/hostname
 
-lxc-start -f $BASE/config -n $NAME
+lxc-start -f $BASE/config -n $NAME -d
+lxc-attach -n $NAME --keep-env /openchain/obc-dev-env/scripts/cloneshell
 
 rm -rf $BASE
