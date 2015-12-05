@@ -3,5 +3,5 @@
 
 while [ "$(facter ipaddress_eth0)" == "" ]; do echo "waiting for IP..."; sleep 1; done
 export MYIP="$(facter ipaddress_eth0)"
-echo "PS1=\"\[\033[01;31m\]\u@$MYIP\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
+echo "PS1=\"\[\033[01;31m\]\u@openchain-node:$MYIP\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
 su -pl vagrant
