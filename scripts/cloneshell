@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# set up our private /tmp
+mount -t tmpfs tmpfs /tmp
+chmod a+rw -R /tmp
+
+# set up our private var
+mount -t tmpfs tmpfs /var
+mkdir -p /var/openchain/db
+chown -R vagrant:vagrant /var/openchain/db
+
 MYIP=$1
 echo "PS1=\"\[\033[01;31m\]\u@openchain-node:$MYIP\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
 su -pl vagrant
