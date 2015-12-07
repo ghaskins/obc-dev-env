@@ -39,6 +39,15 @@ service docker restart
 
 # install/configure LXC
 apt-get install --yes lxc
+LXCCONF=/home/vagrant/.config/lxc
+mkdir -p $LXCCONF
+cat <<EOF >$LXCCONF/default.conf
+lxc.id_map = u 0 100000 65536
+lxc.id_map = g 0 100000 65536
+lxc.network.type = veth
+lxc.network.link = lxcbr0
+EOF
+echo "vagrant veth lxcbr0 2" | sudo tee -a /etc/lxc/lxc-usernet
 
 # Install Python, pip, behave, nose
 apt-get install --yes python-setuptools
