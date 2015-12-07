@@ -44,9 +44,12 @@ mkdir -p $LXCCONF
 cat <<EOF >$LXCCONF/default.conf
 lxc.id_map = u 0 100000 65536
 lxc.id_map = g 0 100000 65536
+lxc.id_map = u 1000 1000 1
+lxc.id_map = g 1000 1000 1
 lxc.network.type = veth
 lxc.network.link = lxcbr0
 EOF
+chown -R vagrant:vagrant /home/vagrant/.config
 echo "vagrant veth lxcbr0 2" | sudo tee -a /etc/lxc/lxc-usernet
 
 # Install Python, pip, behave, nose
