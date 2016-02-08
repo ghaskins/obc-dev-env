@@ -35,6 +35,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.synced_folder "..", "#{SRCMOUNT}"
   config.vm.synced_folder "#{HOST_GOPATH}/src/github.com/openblockchain/obc-peer", "/opt/gopath/src/github.com/openblockchain/obc-peer"
+  config.vm.synced_folder "~/sandbox", "/sandbox"
 
   config.vm.provider :virtualbox do |vb|
     vb.name = "openchain"
