@@ -41,6 +41,9 @@ apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E8
 # Add docker repository
 echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/sources.list.d/docker.list
 
+# Add OBC PPAs
+add-apt-repository ppa:openblockchain/third-party
+
 # Update system
 apt-get update -qq
 
@@ -95,17 +98,18 @@ export GOPATH="/opt/gopath"
 export GOROOT="/opt/go/"
 PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
-#install golang deps
-./installGolang.sh
-
-# Configure RocksDB related deps
+# Install RocksDB and dependencies
+sudo apt-get install -y librocksdb4.1
 sudo apt-get install -y libsnappy-dev
 sudo apt-get install -y zlib1g-dev
 sudo apt-get install -y libbz2-dev
 
+#install golang deps
+./installGolang.sh
+
 # Run go install - CGO flags for RocksDB
 cd $GOPATH/src/github.com/openblockchain/obc-peer
-CGO_CFLAGS="-I/opt/rocksdb/include" CGO_LDFLAGS="-L/opt/rocksdb -lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy" go install
+CGO_LDFLAGS="-lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy" go install
 
 # Copy protobuf dir so we can build the protoc-gen-go binary. Then delete the directory.
 mkdir -p $GOPATH/src/github.com/golang/protobuf/

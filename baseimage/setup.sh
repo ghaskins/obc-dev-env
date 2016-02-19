@@ -55,9 +55,6 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 # Install GRPC
 ./golang_grpcSetup.sh
 
-# Install RocksDB
-./installRocksDB.sh
-
 # Now clean up the VM in preparation to package it up
 apt-get clean
 echo "Preparing filesystem for packaging.  Please be patient..."
