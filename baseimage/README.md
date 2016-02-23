@@ -18,13 +18,26 @@ If a component is found to be both broadly applicable and expensive to build JIT
 
 # Usage
 
-Note: Most variants of make will attempt to upload one or more artifacts at the conclusion of a successful build.  You need to have certain tokens set in your environment to establish credentials with the repositories.  Also note that you can prohibit the upload by purposely _not_ setting the tokens for cases where you only want to test locally.  See section below regarding Uploading Permissions for more details. 
+## Usage Pattern 1 - Local baseimage builds for testing a proposed change
 
-* "make" will generate both a vagrant and docker image locally.
+Note: Most build commands outlined below will attempt to upload one or more artifacts at the conclusion of a successful build.  Whether this upload will succeed or not depends on whether you have the appropriate credentials established in your environment (see Uploading Permissions below for more details).  For local building, you generally do _not_ want any credentials set, and you may ignore any errors in the post-processing phase related to upload failures.
+
+* "make" will generate both a vagrant and docker image.
 * "make vagrant" will build just the vagrant image and install it into the local environment as "obc/baseimage:v0", making it suitable to local testing.
   * To utilize the new base image in your local tests, run `vagrant destroy` then `USE_LOCAL_OBC_BASEIMAGE=true vagrant up`, also preface `vagrant ssh` as `USE_LOCAL_OBC_BASEIMAGE=true vagrant ssh` or simply export that variable, or Vagrant will fail to find the ssh key.
 * "make docker" will build just the docker image and commit it to your local environment as "openblockchain/baseimage"
-* "make push" will push the build configuration to atlas for cloud-hosted building of the images
+
+## Usage Pattern 2 - Release manager promoting a new base image to the public repositories
+
+You will need credentials to the public repositories, as discussed in Uploading Permissions below.  If you do not have these credentials, you are probably not an image release manager.  Otherwise, discuss it on the OBC slack to see if you should be added. 
+
+### Hosted Build Method
+
+* "make push" will push the build configuration to atlas for cloud-hosted building of the images.  You only need to have the ATLAS_TOKEN defined for this to succeed, as the DOCKERHUB credentials are already cached on the build server.  You can check the status of the build [here](https://atlas.hashicorp.com/obc/build-configurations/baseimage/)
+
+### Local Build Method
+
+* "make [all|vagrant|docker]" will generate the type of image as outlined above, and attempt to upload the result using the credentials in your environment.  "make docker" requires DOCKERHUB credentials, "make vagrant" requires ATLAS credentials, and "make all" requires both.
 
 ## Uploading Permissions
 
