@@ -41,9 +41,6 @@ apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E8
 # Add docker repository
 echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/sources.list.d/docker.list
 
-# Add OBC PPAs
-add-apt-repository ppa:openblockchain/third-party
-
 # Update system
 apt-get update -qq
 
@@ -97,12 +94,6 @@ pip install -I flask==0.10.1 python-dateutil==2.2 pytz==2014.3 pyyaml==3.10 couc
 export GOPATH="/opt/gopath"
 export GOROOT="/opt/go/"
 PATH=$GOROOT/bin:$GOPATH/bin:$PATH
-
-# Install RocksDB and dependencies
-sudo apt-get install -y librocksdb4.1
-sudo apt-get install -y libsnappy-dev
-sudo apt-get install -y zlib1g-dev
-sudo apt-get install -y libbz2-dev
 
 #install golang deps
 ./installGolang.sh
