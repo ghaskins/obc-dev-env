@@ -5,7 +5,7 @@
     },
     "variables": {
         "artifact": "baseimage",
-        "release": "0.0.4",
+        "release": "0.0.5",
         "dockerhub_email": "{{env `DOCKERHUB_EMAIL`}}",
         "dockerhub_username": "{{env `DOCKERHUB_USERNAME`}}",
         "dockerhub_password": "{{env `DOCKERHUB_PASSWORD`}}"
@@ -25,7 +25,7 @@
                         "scripts/vagrant/cleanup.sh",
                         "scripts/vagrant/zerodisk.sh"
                     ],
-                    "execute_command": "echo 'vagrant'|sudo -S bash '{{.Path}}'"
+                    "execute_command": "echo 'vagrant'|sudo -S {{.Vars}} bash '{{.Path}}'"
                 },
                 "docker": {
                     "scripts": [
