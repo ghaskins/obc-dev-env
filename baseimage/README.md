@@ -16,9 +16,22 @@ If a component is found to be both broadly applicable and expensive to build JIT
 
 # Usage
 
-* "make" will generate a new .box resource in the CWD, suitable for submission to atlas.
-* "make install" will also install the .box into the local vagrant environment, making it suitable to local testing.
-* To utilize the new base image in your local tests, run `vagrant destroy` then `USE_LOCAL_OBC_BASEIMAGE=true vagrant up`, also preface `vagrant ssh` as `USE_LOCAL_OBC_BASEIMAGE=true vagrant ssh` or simply export that variable, or Vagrant will fail to find the ssh key.
+Note: Most variants of make will attempt to upload one or more artifacts at the conclusion of a successful build.  You need to have certain tokens set in your environment to establish credentials with the repositories.  Also note that you can prohibit the upload by purposely _not_ setting the tokens for cases where you only want to test locally.  See section below regarding Uploading Permissions for more details. 
+
+* "make" will generate both a vagrant and docker image locally.
+* "make vagrant" will build just the vagrant image and install it into the local environment as "obc/baseimage:v0", making it suitable to local testing.
+  * To utilize the new base image in your local tests, run `vagrant destroy` then `USE_LOCAL_OBC_BASEIMAGE=true vagrant up`, also preface `vagrant ssh` as `USE_LOCAL_OBC_BASEIMAGE=true vagrant ssh` or simply export that variable, or Vagrant will fail to find the ssh key.
+* "make docker" will build just the docker image and commit it to your local environment as "openblockchain/baseimage"
+* "make push" will push the build configuration to atlas for cloud-hosted building of the images
+
+## Uploading Permissions
+
+The system relies on several environment variables to establish credentials with the hosting repositories:
+
+* ATLAS_TOKEN - used to push both vagrant images and packer templates to atlas.hashicorp.com
+* DOCKERHUB_[EMAIL|USERNAME|PASSWORD] - used to push docker images to hub.docker.com
+
+Note that if you only plan on pushing the build to the atlas packer build service, you only need the ATLAS_TOKEN set as the dockerhub interaction will occur from the atlas side of the process where the docker credentials are presumably already configured.
 
 ## Versioning
 
