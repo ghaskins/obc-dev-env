@@ -1,5 +1,11 @@
 #!/bin/bash
 
+set -e
+set -x
+
+# Install headers so that we may build the vbox drivers layer
+apt-get install -y linux-headers-$(uname -r) build-essential zlib1g-dev libssl-dev libreadline-gplv2-dev unzip
+
 # Tweak sshd to prevent DNS resolution (speed up logins)
 echo 'UseDNS no' >> /etc/ssh/sshd_config
 

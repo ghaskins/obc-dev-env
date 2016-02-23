@@ -7,12 +7,13 @@
 
 # Stop on first error
 set -e
-
-# Update the entire system to the latest releases
-apt-get update -qq
+set -x
 
 # add OBC PPAs
 add-apt-repository ppa:openblockchain/third-party
+
+# Update the entire system to the latest releases
+apt-get update -qq
 
 # install git
 apt-get install --yes git
@@ -63,7 +64,7 @@ cd /usr/local && sudo tar --strip-components 1 -xzf $SRC_PATH
 # Install GRPC
 
 # ----------------------------------------------------------------
-# NOTE: For instructions, see https://github.com/google/protobufy
+# NOTE: For instructions, see https://github.com/google/protobuf
 #
 # ----------------------------------------------------------------
 
