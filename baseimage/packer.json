@@ -1,0 +1,117 @@
+{
+    "push": {
+        "name": "",
+        "vcs": true
+    },
+    "variables": {
+        "artifact": "baseimage",
+        "release": "0.0.1",
+        "dockerhub_email": "{{env `DOCKERHUB_EMAIL`}}",
+        "dockerhub_username": "{{env `DOCKERHUB_USERNAME`}}",
+        "dockerhub_password": "{{env `DOCKERHUB_PASSWORD`}}"
+    },
+    "provisioners": [
+        {
+            "type": "shell",
+            "override": {
+                "virtualbox-iso": {
+                    "scripts": [
+                        "scripts/common/init.sh",
+                        "scripts/vagrant/init.sh",
+                        "scripts/vagrant/virtualbox.sh",
+                        "scripts/vagrant/vagrant.sh",
+                        "scripts/common/setup.sh",
+                        "scripts/vagrant/cleanup.sh",
+                        "scripts/vagrant/zerodisk.sh"
+                    ],
+                    "execute_command": "echo 'vagrant'|sudo -S bash '{{.Path}}'"
+                },
+                "docker": {
+                    "scripts": [
+                        "scripts/common/init.sh",
+                        "scripts/docker/init.sh",
+                        "scripts/common/setup.sh"
+                    ]
+                }
+            }
+        }
+    ],
+    "builders": [
+        {
+            "type": "virtualbox-iso",
+            "boot_command": [
+                "<esc><esc><enter><wait>",
+                "/install/vmlinuz noapic preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname={{ .Name }} ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+                "initrd=/install/initrd.gz -- <enter>"
+            ],
+            "headless": true,
+            "boot_wait": "10s",
+            "disk_size": 20480,
+            "guest_os_type": "Ubuntu_64",
+            "http_directory": "http",
+            "iso_checksum": "07e4bb5569814eab41fafac882ba127893e3ff0bdb7ec931c9b2d040e3e94e7a",
+            "iso_checksum_type": "sha256",
+            "iso_url": "http://ubuntu.cs.utah.edu/releases/14.04.4/ubuntu-14.04.4-server-amd64.iso",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S bash 'shutdown.sh'",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": ".vbox_version"
+        },
+        {
+            "type": "docker",
+            "image": "ubuntu:trusty",
+            "commit": true
+        }
+    ],
+    "post-processors": [
+        [
+            {
+                "type": "docker-tag",
+                "only": [
+                    "docker"
+                ],
+                "repository": "openblockchain/{{user `artifact`}}",
+                "tag": "{{user `release`}}"
+            },
+            {
+                "type": "docker-push",
+                "only": [
+                    "docker"
+                ],
+                "login": true,
+                "login_email": "{{user `dockerhub_email`}}",
+                "login_username": "{{user `dockerhub_username`}}",
+                "login_password": "{{user `dockerhub_password`}}"
+            }
+
+        ],
+        [
+            {
+                "type": "vagrant",
+                "only": [
+                    "virtualbox-iso"
+                ],
+                "keep_input_artifact": false
+            },
+            {
+                "type": "atlas",
+                "only": [
+                    "virtualbox-iso"
+                ],
+                "artifact": "obc/{{user `artifact`}}",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "provider": "virtualbox",
+                    "version": "{{user `release`}}"
+                }
+            }
+        ]
+    ]
+}
