@@ -77,6 +77,12 @@ usermod -a -G docker vagrant # Add vagrant user to the docker group
 # Test docker
 docker run --rm busybox echo All good
 
+# Install the openblockchain/baseimage docker environment
+DOCKER_BASEIMAGE=openblockchain/baseimage
+DOCKER_FQBASEIMAGE=$DOCKER_BASEIMAGE:`cat /etc/obc-baseimage-release`
+docker pull $DOCKER_FQBASEIMAGE
+docker tag $DOCKER_FQBASEIMAGE $DOCKER_BASEIMAGE:latest
+
 # Install Python, pip, behave, nose
 apt-get install --yes python-setuptools
 apt-get install --yes python-pip

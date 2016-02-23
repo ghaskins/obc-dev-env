@@ -5,7 +5,7 @@
     },
     "variables": {
         "artifact": "baseimage",
-        "release": "0.0.3",
+        "release": "0.0.4",
         "dockerhub_email": "{{env `DOCKERHUB_EMAIL`}}",
         "dockerhub_username": "{{env `DOCKERHUB_USERNAME`}}",
         "dockerhub_password": "{{env `DOCKERHUB_PASSWORD`}}"
@@ -13,6 +13,7 @@
     "provisioners": [
         {
             "type": "shell",
+            "environment_vars": ["BASEIMAGE_RELEASE={{user `release`}}"],
             "override": {
                 "virtualbox-iso": {
                     "scripts": [

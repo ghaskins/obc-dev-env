@@ -94,3 +94,6 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 # Install rocksdb
 apt-get install -y librocksdb4.1 libsnappy-dev zlib1g-dev libbz2-dev
+
+# Make our versioning persistent
+echo $BASEIMAGE_RELEASE > /etc/obc-baseimage-release
