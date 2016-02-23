@@ -26,7 +26,6 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 #install golang
 #apt-get install --yes golang
 mkdir -p $GOPATH
-mkdir -p $GOROOT
 
 #ARCH=`uname -m | sed 's|i686|386|' | sed 's|x86_64|amd64|'`
 ARCH=amd64
