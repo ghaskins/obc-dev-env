@@ -31,6 +31,8 @@ fi
 # Stop on first error
 set -e
 
+add-apt-repository ppa:openblockchain/third-party
+
 # Update the entire system to the latest releases
 apt-get update -qq
 
@@ -54,6 +56,9 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 # Install GRPC
 ./golang_grpcSetup.sh
+
+# Install rocksdb
+apt-get install -y librocksdb4.1 libsnappy-dev zlib1g-dev libbz2-dev
 
 # Now clean up the VM in preparation to package it up
 apt-get clean
