@@ -20,7 +20,7 @@ apt-get install --yes git
 
 # Set Go environment variables needed by other scripts
 export GOPATH="/opt/gopath"
-export GOROOT="/opt/go/"
+export GOROOT="/opt/go"
 PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 #install golang
@@ -39,7 +39,8 @@ chmod 775 $GOROOT
 rm go$GO_VER.linux-${ARCH}.tar.gz
 cat <<EOF >/etc/profile.d/goroot.sh
 export GOROOT=$GOROOT
-export PATH=$PATH:$GOROOT/bin
+export GOPATH=$GOPATH
+export PATH=\$PATH:$GOROOT/bin:$GOPATH/bin
 EOF
 
 

@@ -29,7 +29,7 @@ SCRIPT
 
 Vagrant.configure('2') do |config|
   config.vm.box = "obc/baseimage"
-  config.vm.box_version = ENV['USE_LOCAL_OBC_BASEIMAGE'] ? "0":"0.0.6" # Vagrant does not support versioning local images, the local version is always implicitly version 0
+  config.vm.box_version = ENV['USE_LOCAL_OBC_BASEIMAGE'] ? "0":"0.0.7" # Vagrant does not support versioning local images, the local version is always implicitly version 0
 
   config.vm.network :forwarded_port, guest: 5000, host: 3000 # Openchain REST services
 
