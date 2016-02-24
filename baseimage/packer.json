@@ -5,7 +5,7 @@
     },
     "variables": {
         "artifact": "baseimage",
-        "release": "0.0.5",
+        "release": "0.0.6",
         "dockerhub_email": "{{env `DOCKERHUB_EMAIL`}}",
         "dockerhub_username": "{{env `DOCKERHUB_USERNAME`}}",
         "dockerhub_password": "{{env `DOCKERHUB_PASSWORD`}}"

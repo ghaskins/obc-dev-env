@@ -37,6 +37,11 @@ tar -xvf go$GO_VER.linux-${ARCH}.tar.gz
 mv go $GOROOT
 chmod 775 $GOROOT
 rm go$GO_VER.linux-${ARCH}.tar.gz
+cat <<EOF >/etc/profile.d/goroot.sh
+export GOROOT=$GOROOT
+export PATH=$PATH:$GOROOT/bin
+EOF
+
 
 # Install NodeJS
 #cd /tmp
@@ -58,7 +63,6 @@ cd $TEMP_DIR
 rm -f node*.tar.gz
 wget --quiet https://nodejs.org/dist/v$NODE_VER/$NODE_PACKAGE
 cd /usr/local && sudo tar --strip-components 1 -xzf $SRC_PATH
-rm $SRC_PATH
 
 # Install GRPC
 
@@ -92,10 +96,14 @@ make check
 make install
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 cd ~/
-rm -rf /tmp/protobuf
 
 # Install rocksdb
 apt-get install -y librocksdb4.1 libsnappy-dev zlib1g-dev libbz2-dev
 
 # Make our versioning persistent
 echo $BASEIMAGE_RELEASE > /etc/obc-baseimage-release
+
+# clean up our environment
+apt-get -y autoremove
+apt-get clean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
