@@ -35,13 +35,11 @@ Note: You will need credentials to the public repositories, as discussed in Uplo
 
 ### Hosted Build Method
 
-"make push" will push the build configuration to atlas for cloud-hosted building of the images.  You only need to have the ATLAS_TOKEN defined for this to succeed, as the DOCKERHUB credentials are already cached on the build server.  You can check the status of the build [here](https://atlas.hashicorp.com/obc/build-configurations/baseimage/)
+"make push" will push the build configuration to atlas for cloud-hosted building of the images.  You only need to have the ATLAS_TOKEN defined for this to succeed, as the atlas build server will push the artifacts out to the respective hosts once the build completes.  Therefore, the repository credentials are already cached on the build server and you only need credentials for the build-server itself.  You can check the status of the build [here](https://atlas.hashicorp.com/obc/build-configurations/baseimage/)
 
 ### Local Build Method
 
-* "make" will generate both a vagrant and docker image and requires both ATLAS and DOCKERHUB credentials.
-* "make vagrant" as mentioned will build a vagrant image: requires ATLAS credentials for upload
-* "make docker" as mentioned will build a docker image: requires DOCKERHUB credentials for upload
+"make [all]" will generate both a vagrant and docker image and push them out to the cloud.   This method requires both ATLAS and DOCKERHUB credentials since the artifacts are pushed directly to the hosting providers from your build machine.
 
 ## Uploading Permissions
 
