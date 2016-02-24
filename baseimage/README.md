@@ -20,8 +20,6 @@ If a component is found to be both broadly applicable and expensive to build JIT
 
 ## Usage Pattern 1 - Local baseimage builds for testing a proposed change
 
-Note: Most build commands outlined below will attempt to upload one or more artifacts at the conclusion of a successful build.  Whether this upload will succeed or not depends on whether you have the appropriate credentials established in your environment (see Uploading Permissions below for more details).  For local building, you generally do _not_ want any credentials set, and you may ignore any errors in the post-processing phase related to upload failures.
-
 * "make vagrant" will build just the vagrant image and install it into the local environment as "obc/baseimage:v0", making it suitable to local testing.
   * To utilize the new base image in your local tests, run `vagrant destroy` then `USE_LOCAL_OBC_BASEIMAGE=true vagrant up`, also preface `vagrant ssh` as `USE_LOCAL_OBC_BASEIMAGE=true vagrant ssh` or simply export that variable, or Vagrant will fail to find the ssh key.
 * "make docker" will build just the docker image and commit it to your local environment as "openblockchain/baseimage"
