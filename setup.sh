@@ -81,7 +81,12 @@ docker run --rm busybox echo All good
 DOCKER_BASEIMAGE=openblockchain/baseimage
 DOCKER_FQBASEIMAGE=$DOCKER_BASEIMAGE:`cat /etc/obc-baseimage-release`
 docker pull $DOCKER_FQBASEIMAGE
-docker tag $DOCKER_FQBASEIMAGE $DOCKER_BASEIMAGE:latest
+GUESTENV=`mktemp`
+# extract the interactive environment
+docker run -i $DOCKER_FQBASEIMAGE /bin/bash -l -c printenv > $GUESTENV
+# and then inject the environment for use under standard RUN directives with a :latest tag
+echo -e "FROM $DOCKER_FQBASEIMAGE\n`for i in \`cat $GUESTENV\`; do echo ENV $i; done`"  | docker build -t $DOCKER_BASEIMAGE:latest -
+rm $GUESTENV
 
 # Install Python, pip, behave, nose
 apt-get install --yes python-setuptools
