@@ -58,7 +58,7 @@ cd $TEMP_DIR
 rm -f node*.tar.gz
 wget --quiet https://nodejs.org/dist/v$NODE_VER/$NODE_PACKAGE
 cd /usr/local && sudo tar --strip-components 1 -xzf $SRC_PATH
-#rm $SRC_PATH
+rm $SRC_PATH
 
 # Install GRPC
 
@@ -91,6 +91,8 @@ make
 make check
 make install
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+cd ~/
+rm -rf /tmp/protobuf
 
 # Install rocksdb
 apt-get install -y librocksdb4.1 libsnappy-dev zlib1g-dev libbz2-dev
