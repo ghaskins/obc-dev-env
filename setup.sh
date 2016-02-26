@@ -31,6 +31,8 @@ fi
 # Stop on first error
 set -e
 
+BASEIMAGE_RELEASE=`cat /etc/obc-baseimage-release`
+
 # Update system
 apt-get update -qq
 
@@ -79,7 +81,7 @@ docker run --rm busybox echo All good
 
 # Install the openblockchain/baseimage docker environment
 DOCKER_BASEIMAGE=openblockchain/baseimage
-DOCKER_FQBASEIMAGE=$DOCKER_BASEIMAGE:`cat /etc/obc-baseimage-release`
+DOCKER_FQBASEIMAGE=$DOCKER_BASEIMAGE:$BASEIMAGE_RELEASE
 docker pull $DOCKER_FQBASEIMAGE
 GUESTENV=`mktemp`
 # extract the interactive environment
@@ -131,3 +133,7 @@ sudo chown -R vagrant:vagrant $GOPATH
 
 # Update limits.conf to increase nofiles for RocksDB
 sudo cp /openchain/obc-dev-env/limits.conf /etc/security/limits.conf
+
+# Set our shell prompt to something less ugly than the default from packer
+# (ideally this would incorporate the `git rev-parse --short HEAD` of the current dev-env.git but that is harder to get)
+echo "PS1=\"\[\033[01;31m\]\u@obc-devenv:v$BASEIMAGE_RELEASE\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
