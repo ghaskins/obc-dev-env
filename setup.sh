@@ -32,6 +32,7 @@ fi
 set -e
 
 BASEIMAGE_RELEASE=`cat /etc/obc-baseimage-release`
+DEVENV_REVISION=`(cd /openchain/obc-dev-env; git rev-parse --short HEAD)`
 
 # Update system
 apt-get update -qq
@@ -135,5 +136,4 @@ sudo chown -R vagrant:vagrant $GOPATH
 sudo cp /openchain/obc-dev-env/limits.conf /etc/security/limits.conf
 
 # Set our shell prompt to something less ugly than the default from packer
-# (ideally this would incorporate the `git rev-parse --short HEAD` of the current dev-env.git but that is harder to get)
-echo "PS1=\"\[\033[01;31m\]\u@obc-devenv:v$BASEIMAGE_RELEASE\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
+echo "PS1=\"\[\033[01;31m\]\u@obc-devenv:v$BASEIMAGE_RELEASE-$DEVENV_REVISION\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
