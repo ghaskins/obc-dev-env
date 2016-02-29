@@ -47,6 +47,9 @@ echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/source
 # Update system
 apt-get update -qq
 
+# Define packages that are common to both the vagrant and docker environment
+COMMON_PACKAGES="default-jre" # support for OBCC
+
 # Storage backend logic
 case "${DOCKER_STORAGE_BACKEND}" in
   aufs|AUFS|"")
@@ -88,8 +91,15 @@ GUESTENV=`mktemp`
 # extract the interactive environment
 docker run -i $DOCKER_FQBASEIMAGE /bin/bash -l -c printenv > $GUESTENV
 # and then inject the environment for use under standard RUN directives with a :latest tag
-echo -e "FROM $DOCKER_FQBASEIMAGE\n`for i in \`cat $GUESTENV\`; do echo ENV $i; done`"  | docker build -t $DOCKER_BASEIMAGE:latest -
+echo -e \
+     "FROM $DOCKER_FQBASEIMAGE\n"\
+     "`for i in \`cat $GUESTENV\`; do echo ENV $i; done`\n"\
+     "RUN apt-get update && apt-get install --yes $COMMON_PACKAGES\n"\
+    | docker build -t $DOCKER_BASEIMAGE:latest -
 rm $GUESTENV
+
+# Install our common packages
+apt-get install --yes $COMMON_PACKAGES
 
 # Install Python, pip, behave, nose
 apt-get install --yes python-setuptools
@@ -99,10 +109,6 @@ pip install nose
 
 # updater-server, update-engine, and update-service-common dependencies (for running locally)
 pip install -I flask==0.10.1 python-dateutil==2.2 pytz==2014.3 pyyaml==3.10 couchdb==1.0 flask-cors==2.0.1 requests==2.4.3
-
-# Install Clojure support
-apt-get install --yes default-jre
-apt-get install --yes leiningen
 
 # install ruby and apiaryio
 #apt-get install --yes ruby ruby-dev gcc
