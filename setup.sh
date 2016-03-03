@@ -47,6 +47,9 @@ echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/source
 # Update system
 apt-get update -qq
 
+# Define packages that are common to both the vagrant and docker environment
+COMMON_PACKAGES="default-jre" # support for OBCC
+
 # Storage backend logic
 case "${DOCKER_STORAGE_BACKEND}" in
   aufs|AUFS|"")
@@ -88,8 +91,15 @@ GUESTENV=`mktemp`
 # extract the interactive environment
 docker run -i $DOCKER_FQBASEIMAGE /bin/bash -l -c printenv > $GUESTENV
 # and then inject the environment for use under standard RUN directives with a :latest tag
-echo -e "FROM $DOCKER_FQBASEIMAGE\n`for i in \`cat $GUESTENV\`; do echo ENV $i; done`"  | docker build -t $DOCKER_BASEIMAGE:latest -
+echo -e \
+     "FROM $DOCKER_FQBASEIMAGE\n"\
+     "`for i in \`cat $GUESTENV\`; do echo ENV $i; done`\n"\
+     "RUN apt-get update && apt-get install --yes $COMMON_PACKAGES\n"\
+    | docker build -t $DOCKER_BASEIMAGE:latest -
 rm $GUESTENV
+
+# Install our common packages
+apt-get install --yes $COMMON_PACKAGES
 
 # Install Python, pip, behave, nose
 apt-get install --yes python-setuptools
@@ -137,3 +147,11 @@ sudo cp /openchain/obc-dev-env/limits.conf /etc/security/limits.conf
 
 # Set our shell prompt to something less ugly than the default from packer
 echo "PS1=\"\[\033[01;31m\]\u@obc-devenv:v$BASEIMAGE_RELEASE-$DEVENV_REVISION\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
+
+# Make our tools available on the path
+cat <<EOF >/tmp/obctoolspath.sh
+export PATH="/openchain/obc-dev-env/bin:\$PATH"
+EOF
+sudo mv /tmp/obctoolspath.sh /etc/profile.d/obctoolspath.sh
+sudo chmod 0755 /etc/profile.d/obctoolspath.sh
+source /etc/profile.d/obctoolspath.sh
