@@ -51,3 +51,7 @@ Note that if you only plan on pushing the build to the atlas packer build servic
 ## Versioning
 
 Vagrant boxes are only versioned when they are submitted to a repository.  Vagrant does not support applying a version to a vagrant box via the `vagrant box add` command.  Adding the box gives it an implicit version of 0.  Setting `USE_LOCAL_OBC_BASEIMAGE=true` in the `vagrant up` command causes the Vagrant file in the the parent directory to pick version 0, instead of the default.
+
+## Debian/Ubuntu Packaging
+
+You can find details about how we package up some of the software [here](./PPA.md)
