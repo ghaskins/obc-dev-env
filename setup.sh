@@ -31,6 +31,9 @@ fi
 # Stop on first error
 set -e
 
+BASEIMAGE_RELEASE=`cat /etc/obc-baseimage-release`
+DEVENV_REVISION=`(cd /openchain/obc-dev-env; git rev-parse --short HEAD)`
+
 # Update system
 apt-get update -qq
 
@@ -77,6 +80,17 @@ usermod -a -G docker vagrant # Add vagrant user to the docker group
 # Test docker
 docker run --rm busybox echo All good
 
+# Install the openblockchain/baseimage docker environment
+DOCKER_BASEIMAGE=openblockchain/baseimage
+DOCKER_FQBASEIMAGE=$DOCKER_BASEIMAGE:$BASEIMAGE_RELEASE
+docker pull $DOCKER_FQBASEIMAGE
+GUESTENV=`mktemp`
+# extract the interactive environment
+docker run -i $DOCKER_FQBASEIMAGE /bin/bash -l -c printenv > $GUESTENV
+# and then inject the environment for use under standard RUN directives with a :latest tag
+echo -e "FROM $DOCKER_FQBASEIMAGE\n`for i in \`cat $GUESTENV\`; do echo ENV $i; done`"  | docker build -t $DOCKER_BASEIMAGE:latest -
+rm $GUESTENV
+
 # Install Python, pip, behave, nose
 apt-get install --yes python-setuptools
 apt-get install --yes python-pip
@@ -98,14 +112,9 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 #install golang deps
 ./installGolang.sh
 
-# Configure RocksDB related deps
-sudo apt-get install -y libsnappy-dev
-sudo apt-get install -y zlib1g-dev
-sudo apt-get install -y libbz2-dev
-
 # Run go install - CGO flags for RocksDB
 cd $GOPATH/src/github.com/openblockchain/obc-peer
-CGO_CFLAGS="-I/opt/rocksdb/include" CGO_LDFLAGS="-L/opt/rocksdb -lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy" go install
+CGO_LDFLAGS="-lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy" go install
 
 # Copy protobuf dir so we can build the protoc-gen-go binary. Then delete the directory.
 mkdir -p $GOPATH/src/github.com/golang/protobuf/
@@ -125,3 +134,6 @@ sudo chown -R vagrant:vagrant $GOPATH
 
 # Update limits.conf to increase nofiles for RocksDB
 sudo cp /openchain/obc-dev-env/limits.conf /etc/security/limits.conf
+
+# Set our shell prompt to something less ugly than the default from packer
+echo "PS1=\"\[\033[01;31m\]\u@obc-devenv:v$BASEIMAGE_RELEASE-$DEVENV_REVISION\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
