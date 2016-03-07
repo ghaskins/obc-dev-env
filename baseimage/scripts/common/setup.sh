@@ -103,6 +103,7 @@ cd rocksdb
 git checkout tags/v4.1
 PORTABLE=1 make shared_lib
 INSTALL_PATH=/usr/local make install-shared
+ldconfig
 cd ~/
 
 # Make our versioning persistent
