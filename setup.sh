@@ -136,4 +136,4 @@ sudo chown -R vagrant:vagrant $GOPATH
 sudo cp /openchain/obc-dev-env/limits.conf /etc/security/limits.conf
 
 # Set our shell prompt to something less ugly than the default from packer
-echo "PS1=\"\[\033[01;31m\]\u@obc-devenv:v$BASEIMAGE_RELEASE-$DEVENV_REVISION\w $\[\033[00m\] \"" >> /home/vagrant/.bashrc
+echo "PS1=\"\u@obc-devenv:v$BASEIMAGE_RELEASE-$DEVENV_REVISION:\w$ \"" >> /home/vagrant/.bashrc
