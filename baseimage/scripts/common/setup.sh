@@ -9,9 +9,6 @@
 set -e
 set -x
 
-# add OBC PPAs
-add-apt-repository ppa:openblockchain/third-party
-
 # Update the entire system to the latest releases
 apt-get update -qq
 
@@ -99,7 +96,15 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 cd ~/
 
 # Install rocksdb
-apt-get install -y librocksdb4.1 libsnappy-dev zlib1g-dev libbz2-dev
+apt-get install -y libsnappy-dev zlib1g-dev libbz2-dev
+cd /tmp
+git clone https://github.com/facebook/rocksdb.git
+cd rocksdb
+git checkout tags/v4.1
+PORTABLE=1 make shared_lib
+INSTALL_PATH=/usr/local make install-shared
+ldconfig
+cd ~/
 
 # Make our versioning persistent
 echo $BASEIMAGE_RELEASE > /etc/obc-baseimage-release
