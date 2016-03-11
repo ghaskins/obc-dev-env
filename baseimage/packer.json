@@ -5,7 +5,7 @@
     },
     "variables": {
         "artifact": "baseimage",
-        "release": "0.0.8",
+        "release": "0.0.9",
         "dockerhub_email": "{{env `DOCKERHUB_EMAIL`}}",
         "dockerhub_username": "{{env `DOCKERHUB_USERNAME`}}",
         "dockerhub_password": "{{env `DOCKERHUB_PASSWORD`}}"
@@ -63,7 +63,13 @@
             "ssh_wait_timeout": "10000s",
             "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S bash 'shutdown.sh'",
             "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-            "virtualbox_version_file": ".vbox_version"
+            "virtualbox_version_file": ".vbox_version",
+            "hard_drive_interface": "sata",
+            "vboxmanage": [
+                ["modifyvm", "{{.Name}}", "--vrde", "off"],
+                ["modifyvm", "{{.Name}}", "--pae", "off"],
+                ["modifyvm", "{{.Name}}", "--paravirtprovider", "legacy"]
+            ]
         },
         {
             "type": "docker",
