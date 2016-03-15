@@ -159,7 +159,7 @@ PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 # Run go install - CGO flags for RocksDB
 cd $GOPATH/src/github.com/openblockchain/obc-peer
-CGO_LDFLAGS="-lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy" go install
+CGO_CFLAGS=" " CGO_LDFLAGS="-lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy" go install
 
 # Copy protobuf dir so we can build the protoc-gen-go binary. Then delete the directory.
 mkdir -p $GOPATH/src/github.com/golang/protobuf/

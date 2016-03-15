@@ -38,6 +38,7 @@ cat <<EOF >/tmp/gopath.sh
 export GOPATH="$GOPATH"
 export GOROOT="$GOROOT"
 export PATH="$GOROOT/bin:$GOPATH/bin:\$PATH"
+export CGO_CFLAGS=" "
 export CGO_LDFLAGS="-lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy"
 EOF
 sudo mv /tmp/gopath.sh /etc/profile.d/gopath.sh
