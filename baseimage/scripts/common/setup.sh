@@ -11,6 +11,7 @@ set -x
 
 # Update the entire system to the latest releases
 apt-get update -qq
+apt-get dist-upgrade -qqy
 
 # install git
 apt-get install --yes git
