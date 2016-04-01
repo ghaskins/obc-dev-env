@@ -137,6 +137,11 @@ echo -e "FROM $DOCKER_FQBASEIMAGE\n`for i in \`cat $GUESTENV\`; do echo ENV $i; 
 rm $GUESTENV
 
 # Install Python, pip, behave, nose
+#
+# install python-dev and libyaml-dev to get compiled speedups
+apt-get install --yes python-dev
+apt-get install --yes libyaml-dev
+
 apt-get install --yes python-setuptools
 apt-get install --yes python-pip
 pip install behave
