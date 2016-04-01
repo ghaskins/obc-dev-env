@@ -15,7 +15,17 @@
 
 # This is the mount point for the sync_folders of the source
 SRCMOUNT = "/openchain"
+
+if not ENV.has_key?('GOPATH')
+  abort("GOPATH is not set")
+end
+
 HOST_GOPATH = ENV['GOPATH']
+HOST_OBC_PEER_DIR = HOST_GOPATH + "/src/github.com/openblockchain/obc-peer" 
+
+if not Dir.exists?(HOST_OBC_PEER_DIR)
+  abort("obc-peer directory '" + HOST_OBC_PEER_DIR + "' does not exist")
+end
 
 $script = <<SCRIPT
 set -x
@@ -35,7 +45,7 @@ Vagrant.configure('2') do |config|
   config.vm.network :forwarded_port, guest: 30303, host: 30303 # Openchain gRPC services
 
   config.vm.synced_folder "..", "#{SRCMOUNT}"
-  config.vm.synced_folder "#{HOST_GOPATH}/src/github.com/openblockchain/obc-peer", "/opt/gopath/src/github.com/openblockchain/obc-peer"
+  config.vm.synced_folder "#{HOST_OBC_PEER_DIR}", "/opt/gopath/src/github.com/openblockchain/obc-peer"
 
   config.vm.provider :virtualbox do |vb|
     vb.name = "openchain"
