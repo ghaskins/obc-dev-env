@@ -38,8 +38,8 @@ cat <<EOF >/tmp/gopath.sh
 export GOPATH="$GOPATH"
 export GOROOT="$GOROOT"
 export PATH="$GOROOT/bin:$GOPATH/bin:\$PATH"
-export CGO_CFLAGS="-I/opt/rocksdb/include"
-export CGO_LDFLAGS="-L/opt/rocksdb -lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy"
+export CGO_CFLAGS=" "
+export CGO_LDFLAGS="-lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy"
 EOF
 sudo mv /tmp/gopath.sh /etc/profile.d/gopath.sh
 sudo chmod 0755 /etc/profile.d/gopath.sh
